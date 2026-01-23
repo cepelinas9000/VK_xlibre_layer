@@ -45,7 +45,7 @@ Then start X with it (don't forget libinput driver):
 
 After starting you need envirioment variables for layer (don't need install):
 ```bash
-export VK_ADD_IMPLICIT_LAYER_PATH=/home/to/VK_xlibre_layer/build/src # path to json
+export VK_ADD_IMPLICIT_LAYER_PATH=/home/to/VK_xlibre_layer/build/src # path to json metadata json (it only one here)
 export ENABLE_XLIBRE_WSI=1
 
 # you can check with vulkaninfo
