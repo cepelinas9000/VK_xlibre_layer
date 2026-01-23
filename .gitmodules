@@ -1,0 +1,3 @@
+[submodule "subprojects/vkroots"]
+	path = subprojects/vkroots
+	url = https://github.com/misyltoad/vkroots.git
