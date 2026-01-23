@@ -1,5 +1,13 @@
 Currently only for https://github.com/cepelinas9000/xserver/tree/wip/x11hdr
 
+This project is with git submodule, you need:
+```
+git submodule init
+git submodule update
+```
+or use switch during clone
+
+
 **This only tested on 10 bit and only modesetting driver with NVIDIA 590.48.01 using NVIDIA GeForce 4080 **
 
 This is working the following:
