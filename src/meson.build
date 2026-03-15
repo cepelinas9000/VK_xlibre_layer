@@ -1,7 +1,7 @@
 vkroots_dep = dependency('vkroots')
 
 xlibre_wsi_layer = shared_library('VkLayer_xlibre_wsi', 'VkLayer_xlibre_wsi.cpp', 
-  dependencies     : [ vkroots_dep, xcb_dep, xlib_dep ],
+  dependencies     : [ vkroots_dep, xcb_dep, xlib_dep, x11xcb_dep ],
   install          : true )
 
 out_lib_dir = join_paths(prefix, lib_dir)

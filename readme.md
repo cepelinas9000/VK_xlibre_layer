@@ -5,37 +5,37 @@ This project is with git submodule, you need:
 git submodule init
 git submodule update
 ```
-or use switch during clone
+or use specific git switch during clone
 
+**This only tested on 16 bit half float and only modesetting driver with NVIDIA 590.48.01 using NVIDIA GeForce 4080 **
 
-**This only tested on 10 bit and only modesetting driver with NVIDIA 590.48.01 using NVIDIA GeForce 4080 **
-
-This is working the following:
-
-When layer enabled (by default 10bit hdr) it return only hdr surfaces (not checks), for example:
+When layer enabled it will return XLibre server supported surfaces, for example:
 ```
 ...
-       Formats: count = 3
+        Formats: count = 4
                 SurfaceFormat[0]:
-                        format = FORMAT_A2B10G10R10_UNORM_PACK32
-                        colorSpace = COLOR_SPACE_PASS_THROUGH_EXT
+                        format = FORMAT_B8G8R8A8_UNORM
+                        colorSpace = COLOR_SPACE_SRGB_NONLINEAR_KHR
                 SurfaceFormat[1]:
-                        format = FORMAT_A2B10G10R10_UNORM_PACK32
-                        colorSpace = COLOR_SPACE_HDR10_ST2084_EXT
+                        format = FORMAT_B8G8R8A8_SRGB
+                        colorSpace = COLOR_SPACE_SRGB_NONLINEAR_KHR
                 SurfaceFormat[2]:
-                        format = FORMAT_A2B10G10R10_UNORM_PACK32
-                        colorSpace = COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT
+                        format = FORMAT_R16G16B16A16_SFLOAT
+                        colorSpace = COLOR_SPACE_HDR10_ST2084_EXT
+                SurfaceFormat[3]:
+                        format = FORMAT_R16G16B16A16_SFLOAT
+                        colorSpace = COLOR_SPACE_BT2020_LINEAR_EXT
 ...
 ```
 
 Then when `CreateSwapchainKHR` is called:
 * latches depth, bpp from surface format and visual from HDRColor class (id 6)
-* Changes `XWindow` depth and visual class according surface format (currently depth 32 or depth 64)
-* When dri3 pixmap are created uses latched depth & bpp
-* when lower layer call executes unlatches
+* Changes `XWindow` depth and visual class according surface format (currently it is implemented and colormap change)
+* When dri3 pixmap are created it uses latched depth & bpp (from visual style) and with aditional call provided colorSpace
+* second latch call unlatches this behaviour
 
 
-To enable you need small xorg.conf:
+To enable you need add "HDR" to xorg.conf (currently only 16f supported):
 ```
 Section "Screen"
     Identifier "default"
@@ -51,7 +51,7 @@ Then start X with it (don't forget libinput driver):
 # X :2 vt2 -config /path/to/hdr-xorg.conf
 ```
 
-After starting you need envirioment variables for layer (don't need install):
+After starting you need envirioment variables for layer (don't need install it - just enough build):
 ```bash
 export VK_ADD_IMPLICIT_LAYER_PATH=/home/to/VK_xlibre_layer/build/src # path to json metadata json (it only one here)
 export ENABLE_XLIBRE_WSI=1
@@ -59,8 +59,8 @@ export ENABLE_XLIBRE_WSI=1
 # you can check with vulkaninfo
 vulkaninfo
 # change in VkLayer_xlibre_wsi.x86_64.json library path to absolute location of libVkLayer_xlibre_wsi.so
-#then start mpv in passthough mode:
+#then start mpv:
 
-mpv hdr_video.mp4 --no-config --vo=gpu-next --hwdec=vulkan-copy --target-trc=pq --target-colorspace-hint=yes --msg-level=vo=v
+mpv hdr_video.mp4 --target-colorspace-hint=yes
 
 ```

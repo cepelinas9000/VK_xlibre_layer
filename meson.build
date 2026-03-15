@@ -33,6 +33,7 @@ vulkan_dep = dependency('vulkan')
 
 xcb_dep = dependency('xcb')
 xlib_dep = dependency('x11')
+x11xcb_dep = dependency('x11-xcb')
 # Vulkan headers are installed separately from the loader (which ships the
 # pkg-config file)
 if not cppc.check_header('vulkan/vulkan.h', dependencies: vulkan_dep)
